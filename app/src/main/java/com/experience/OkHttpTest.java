@@ -2,6 +2,7 @@ package com.experience;
 
 import java.io.IOException;
 
+import anotation.Nemo;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,6 +16,7 @@ import okhttp3.Response;
  */
 public class OkHttpTest {
 
+    @Nemo(value="121")
     public static void main(String[] args) {
 
         String testUrl="https://www.baidu.com/";

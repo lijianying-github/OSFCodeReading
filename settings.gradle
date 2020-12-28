@@ -1,2 +1,3 @@
+include ':JavaSenior'
 include ':app'
 rootProject.name = "OkhttpExperience"

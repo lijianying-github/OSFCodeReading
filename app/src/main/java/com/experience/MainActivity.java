@@ -35,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d("nemo", "MainActivity onResume=====================");
         if (!isLaunch) {
-            startActivity(new Intent(MainActivity.this, SecondActivity.class));
+            Intent intent=new Intent(MainActivity.this, SecondActivity.class);
+            intent.putExtra(SecondActivity.EXTRA_KEY_MESSAGE,"Main launch==");
+            startActivity(intent);
             isLaunch=true;
         }
     }

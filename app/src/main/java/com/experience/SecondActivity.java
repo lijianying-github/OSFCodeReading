@@ -5,17 +5,28 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.experience.anotion.BindIntent;
+import com.experience.anotion.BindIntentHelper;
+
 public class SecondActivity extends AppCompatActivity {
+
+    public static final String EXTRA_KEY_MESSAGE="message";
+
+    @BindIntent(key = EXTRA_KEY_MESSAGE,defaultValue = "666")
+    private String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        BindIntentHelper.parseIntent(this);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Log.d("nemo","SecondActivity onCreate=====================");
     }
 
