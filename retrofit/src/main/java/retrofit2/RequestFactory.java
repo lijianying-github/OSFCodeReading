@@ -64,11 +64,16 @@ import retrofit2.http.Url;
 import static retrofit2.Utils.methodError;
 import static retrofit2.Utils.parameterError;
 
+/**
+ * RequestFactory根据传入的retrofit方法生成一个可以发起请求的对象
+ * 包含请求方法，头，路径，以及参数封装实现
+ */
 final class RequestFactory {
     static RequestFactory parseAnnotations(Retrofit retrofit, Method method) {
         return new Builder(retrofit, method).build();
     }
 
+    //RequestFactory
     private final Method method;
     private final HttpUrl baseUrl;
     final String httpMethod;
@@ -197,10 +202,15 @@ final class RequestFactory {
                 parseMethodAnnotation(annotation);
             }
 
+            //方法必须包含请求方法注解
             if (httpMethod == null) {
                 throw methodError(method, "HTTP method annotation is required (e.g., @GET, @POST, etc.).");
             }
 
+            //Multipart和FormUrlEncoded必须用在有Body的请求方法上
+            //对于自定义Http注解hasBody为false和非（POST,PATCH,PUT）
+            // 请求方法不能和Multipart和FormUrlEncoded一起使用
+            //并且Multipart和FormUrlEncoded不能一起使用只能二选一
             if (!hasBody) {
                 if (isMultipart) {
                     throw methodError(
@@ -215,26 +225,34 @@ final class RequestFactory {
                 }
             }
 
+            //解析方法参数注解以及类型.注解数组是二维数组
             int parameterCount = parameterAnnotationsArray.length;
+
             parameterHandlers = new ParameterHandler<?>[parameterCount];
             for (int p = 0, lastParameter = parameterCount - 1; p < parameterCount; p++) {
                 parameterHandlers[p] =
                         parseParameter(p, parameterTypes[p], parameterAnnotationsArray[p], p == lastParameter);
             }
 
+//            没有url参数
             if (relativeUrl == null && !gotUrl) {
                 throw methodError(method, "Missing either @%s URL or @Url parameter.", httpMethod);
             }
+
+//            body校验
             if (!isFormEncoded && !isMultipart && !hasBody && gotBody) {
                 throw methodError(method, "Non-body HTTP method cannot contain @Body.");
             }
+//            Form-encoded注解必须有Field参数注解
             if (isFormEncoded && !gotField) {
                 throw methodError(method, "Form-encoded method must contain at least one @Field.");
             }
+//            Multipart方法注解必须有@Part参数注解
             if (isMultipart && !gotPart) {
                 throw methodError(method, "Multipart method must contain at least one @Part.");
             }
 
+            //将注解解析出来的参数构建RequestFactory对象
             return new RequestFactory(this);
         }
 
@@ -368,12 +386,22 @@ final class RequestFactory {
             return builder.build();
         }
 
+        /**
+         * 参数多注解解析
+         *
+         * @param p                 注解位置
+         * @param parameterType     参数类型
+         * @param annotations       参数注解集合
+         * @param allowContinuation 允许继续
+         * @return 解析结果
+         */
         private @Nullable
         ParameterHandler<?> parseParameter(
                 int p, Type parameterType, @Nullable Annotation[] annotations, boolean allowContinuation) {
             ParameterHandler<?> result = null;
             if (annotations != null) {
                 for (Annotation annotation : annotations) {
+                    //解析指定类型参数的注解
                     ParameterHandler<?> annotationAction =
                             parseParameterAnnotation(p, parameterType, annotations, annotation);
 
@@ -382,6 +410,7 @@ final class RequestFactory {
                     }
 
                     if (result != null) {
+                        //多个retrofit注解会有多个result
                         throw parameterError(
                                 method, p, "Multiple Retrofit annotations found, only one allowed.");
                     }
@@ -410,11 +439,16 @@ final class RequestFactory {
         private ParameterHandler<?> parseParameterAnnotation(
                 int p, Type type, Annotation[] annotations, Annotation annotation) {
             if (annotation instanceof Url) {
+                //校验参数类型：不能是泛型参数以及通配符
+                //处理Url类型注解：只能有一个，不能含有Path注解，不能请求方法注解中相对路径并存
+                //顺序上必须在@Query相关类型前面,但是会限定一个参数只能有一个retrofit注解
                 validateResolvableType(p, type);
                 if (gotUrl) {
+                    //Url类型注解：只能有一个
                     throw parameterError(method, p, "Multiple @Url method annotations found.");
                 }
                 if (gotPath) {
+                    //Url类型注解：不能含有Path注解
                     throw parameterError(method, p, "@Path parameters may not be used with @Url.");
                 }
                 if (gotQuery) {
@@ -427,11 +461,14 @@ final class RequestFactory {
                     throw parameterError(method, p, "A @Url parameter must not come after a @QueryMap.");
                 }
                 if (relativeUrl != null) {
+                    //不能请求方法注解中相对路径并存，relativeUrl先解析完成
                     throw parameterError(method, p, "@Url cannot be used with @%s URL", httpMethod);
                 }
 
+                //url注解解析完成
                 gotUrl = true;
 
+                //检查type的类型
                 if (type == HttpUrl.class
                         || type == String.class
                         || type == URI.class
@@ -445,6 +482,7 @@ final class RequestFactory {
                 }
 
             } else if (annotation instanceof Path) {
+//                Path注解只能在请求方法中有相对路径时使用，不能和Url注解混用
                 validateResolvableType(p, type);
                 if (gotQuery) {
                     throw parameterError(method, p, "A @Path parameter must not come after a @Query.");
@@ -466,6 +504,7 @@ final class RequestFactory {
 
                 Path path = (Path) annotation;
                 String name = path.value();
+                //校验Path注解名字是否和方法相对路径一致
                 validatePathName(p, name);
 
                 Converter<?, String> converter = retrofit.stringConverter(type, annotations);
@@ -861,6 +900,12 @@ final class RequestFactory {
             return null; // Not a Retrofit annotation.
         }
 
+        /**
+         * 校验参数类型：不能是泛型参数以及通配符
+         *
+         * @param p    position
+         * @param type type
+         */
         private void validateResolvableType(int p, Type type) {
             if (Utils.hasUnresolvableType(type)) {
                 throw parameterError(
@@ -868,6 +913,7 @@ final class RequestFactory {
             }
         }
 
+        //检验方法参数列表Path注解的value是否和方法相对路径上path名称一致
         private void validatePathName(int p, String name) {
             if (!PARAM_NAME_REGEX.matcher(name).matches()) {
                 throw parameterError(
