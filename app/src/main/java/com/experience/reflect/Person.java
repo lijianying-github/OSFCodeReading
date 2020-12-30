@@ -37,8 +37,14 @@ public class Person extends Animal {
         return name;
     }
 
+    interface  A{}
+    interface  B extends A{}
+
     public static void main(String[] args) {
         try {
+            System.out.println("A interface class=="+A.class);
+            System.out.println("B interface class=="+B.class);
+
             Class<Person> person = (Class<Person>) new Person().getClass();
             System.out.println("getName==" + person.getName());
             System.out.println("getSimpleName==" + person.getSimpleName());
@@ -59,6 +65,7 @@ public class Person extends Animal {
 
             for (Method method : person.getDeclaredMethods()) {
                 System.out.println("methodName==" + method.getName());
+                System.out.println("methodReturnType==" + method.getReturnType());
                 System.out.println("methodReturnType==" + method.getReturnType());
                 System.out.println("=========================");
             }

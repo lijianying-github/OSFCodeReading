@@ -15,23 +15,27 @@
  */
 package retrofit2;
 
-import static retrofit2.Utils.methodError;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+
 import javax.annotation.Nullable;
+
+import static retrofit2.Utils.methodError;
 
 abstract class ServiceMethod<T> {
   static <T> ServiceMethod<T> parseAnnotations(Retrofit retrofit, Method method) {
     RequestFactory requestFactory = RequestFactory.parseAnnotations(retrofit, method);
 
+    //获取方法返回的泛型类型
     Type returnType = method.getGenericReturnType();
+    //若返回的泛型类型是泛型或者通配符则无法确定类型，异常处理
     if (Utils.hasUnresolvableType(returnType)) {
       throw methodError(
           method,
           "Method return type must not include a type variable or wildcard: %s",
           returnType);
     }
+    //retrofit 接口返回值不能直接是void
     if (returnType == void.class) {
       throw methodError(method, "Service methods cannot return void.");
     }

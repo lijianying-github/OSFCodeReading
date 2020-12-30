@@ -219,7 +219,7 @@ public final class Retrofit {
     }
 
     ServiceMethod<?> loadServiceMethod(Method method) {
-      //先获取serviceMethodCache缓存中的方法，若有直接返回缓存中结果
+        //先获取serviceMethodCache缓存中的方法，若有直接返回缓存中结果
         ServiceMethod<?> result = serviceMethodCache.get(method);
         if (result != null) return result;
 
@@ -227,6 +227,7 @@ public final class Retrofit {
         synchronized (serviceMethodCache) {
             result = serviceMethodCache.get(method);
             if (result == null) {
+                //方法解析并创建ServiceMethod实例
                 result = ServiceMethod.parseAnnotations(this, method);
                 serviceMethodCache.put(method, result);
             }

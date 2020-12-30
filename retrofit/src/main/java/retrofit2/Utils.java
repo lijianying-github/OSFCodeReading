@@ -345,25 +345,32 @@ final class Utils {
     return paramType;
   }
 
+  //class相关类型判断见博客：https://www.cnblogs.com/mylove7/articles/5811748.html
   static boolean hasUnresolvableType(@Nullable Type type) {
+    //类型是class，直接实现子类,不是泛型类
     if (type instanceof Class<?>) {
       return false;
     }
+    //参数化类型：就是指定了泛型的类型 比如Map<String,Int>这种
     if (type instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) type;
       for (Type typeArgument : parameterizedType.getActualTypeArguments()) {
+        //获取指定赋值泛型的类型，有可能还是泛型或者是具体的类
         if (hasUnresolvableType(typeArgument)) {
           return true;
         }
       }
       return false;
     }
+    //数组
     if (type instanceof GenericArrayType) {
       return hasUnresolvableType(((GenericArrayType) type).getGenericComponentType());
     }
+    //类型变量比如：T,K这种
     if (type instanceof TypeVariable) {
       return true;
     }
+    //通配符类型 ? extends String ,? super String
     if (type instanceof WildcardType) {
       return true;
     }
