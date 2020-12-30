@@ -18,7 +18,7 @@ public class SecondActivity extends AppCompatActivity {
 
     public static final String EXTRA_KEY_MESSAGE="message";
 
-    @BindIntent(key = EXTRA_KEY_MESSAGE,defaultValue = "666")
+    @BindIntent(key = EXTRA_KEY_MESSAGE)
     private String message;
 
     @Override
