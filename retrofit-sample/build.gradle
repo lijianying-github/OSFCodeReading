@@ -32,6 +32,7 @@ dependencies {
   androidTestImplementation deps.assertj
   androidTestImplementation deps.mockwebserver
   androidTestImplementation deps.androidxTestRunner
+  testImplementation 'junit:junit:4.13.1'
 
   implementation project(':retrofit')
   implementation project(':retrofit-mock')
