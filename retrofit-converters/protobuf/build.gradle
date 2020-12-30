@@ -1,0 +1,24 @@
+apply plugin: 'java-library'
+apply plugin: 'com.google.protobuf'
+
+dependencies {
+  api project(':retrofit')
+  api deps.protobuf
+  compileOnly deps.findBugsAnnotations
+
+  testImplementation deps.junit
+  testImplementation deps.assertj
+  testImplementation deps.mockwebserver
+}
+
+jar {
+  manifest {
+    attributes  'Automatic-Module-Name': 'retrofit2.converter.protobuf'
+  }
+}
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:${versions.protobuf}"
+  }
+}

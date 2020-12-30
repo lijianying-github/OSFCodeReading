@@ -33,8 +33,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'org.jetbrains:annotations:15.0'
-    implementation project(path: ':JavaSenior')
+    implementation 'org.jetbrains:annotations:16.0.1'
     testImplementation 'junit:junit:4.13.1'
     implementation 'com.squareup.okio:okio:1.17.2'
     implementation 'org.conscrypt:conscrypt-openjdk-uber:2.0.0'
