@@ -15,18 +15,22 @@
  */
 package retrofit2;
 
-import static retrofit2.Utils.getRawType;
-import static retrofit2.Utils.methodError;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
 import javax.annotation.Nullable;
+
 import kotlin.coroutines.Continuation;
 import okhttp3.ResponseBody;
 
-/** Adapts an invocation of an interface method into an HTTP call. */
+import static retrofit2.Utils.getRawType;
+import static retrofit2.Utils.methodError;
+
+/** Adapts an invocation of an interface method into an HTTP call.
+ * 将接口方法适配成Http call
+ * */
 abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<ReturnT> {
   /**
    * Inspects the annotations on an interface method to construct a reusable service method that

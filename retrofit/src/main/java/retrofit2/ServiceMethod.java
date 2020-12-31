@@ -41,7 +41,7 @@ abstract class ServiceMethod<T> {
             throw methodError(method, "Service methods cannot return void.");
         }
 
-        //根据方法解析response部分，封装response数据转换生成call
+        //根据方法以及请求解析response部分，封装response数据转换 并最终封装生成一个call
         return HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);
     }
 

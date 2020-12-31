@@ -64,6 +64,11 @@ final class Utils {
     return methodError(method, message + " (parameter #" + (p + 1) + ")", args);
   }
 
+  /**
+   * 获取指定类型的原始数据类型（主要是解析泛型，通配符这些类型参数）
+   * @param type  判断类型
+   * @return 原始的数据类型：基本数据类型+原始类
+   */
   static Class<?> getRawType(Type type) {
     Objects.requireNonNull(type, "type == null");
 
@@ -71,6 +76,7 @@ final class Utils {
       // Type is a normal class.
       return (Class<?>) type;
     }
+    //参数化类型：List<String>
     if (type instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) type;
 
@@ -80,16 +86,19 @@ final class Utils {
       if (!(rawType instanceof Class)) throw new IllegalArgumentException();
       return (Class<?>) rawType;
     }
+    //数组
     if (type instanceof GenericArrayType) {
       Type componentType = ((GenericArrayType) type).getGenericComponentType();
       return Array.newInstance(getRawType(componentType), 0).getClass();
     }
     if (type instanceof TypeVariable) {
+      //泛型变量T,返回object
       // We could use the variable's bounds, but that won't work if there are multiple. Having a raw
       // type that's more general than necessary is okay.
       return Object.class;
     }
     if (type instanceof WildcardType) {
+      //对于通配符类型获取？extendX 的X类型
       return getRawType(((WildcardType) type).getUpperBounds()[0]);
     }
 
@@ -193,14 +202,15 @@ final class Utils {
   }
 
   /**
-   * Returns the generic form of {@code supertype}. For example, if this is {@code
-   * ArrayList<String>}, this returns {@code Iterable<String>} given the input {@code
-   * Iterable.class}.
+   * 返回泛型类型的最终超类：比如supertype是 {@code ArrayList<String>}返回值是 {@code
+   *   Iterable.class} ArrayList的最终泛型类是Iterable
    *
    * @param supertype a superclass of, or interface implemented by, this.
    */
   static Type getSupertype(Type context, Class<?> contextRawType, Class<?> supertype) {
+    //没有子类父类关系
     if (!supertype.isAssignableFrom(contextRawType)) throw new IllegalArgumentException();
+
     return resolve(
         context, contextRawType, getGenericSupertype(context, contextRawType, supertype));
   }
@@ -325,6 +335,7 @@ final class Utils {
   }
 
   static Type getParameterUpperBound(int index, ParameterizedType type) {
+    //获取真实的类型参数，就是有几个泛型
     Type[] types = type.getActualTypeArguments();
     if (index < 0 || index >= types.length) {
       throw new IllegalArgumentException(
@@ -332,6 +343,7 @@ final class Utils {
     }
     Type paramType = types[index];
     if (paramType instanceof WildcardType) {
+      //若是通配符类型获取上界类型
       return ((WildcardType) paramType).getUpperBounds()[0];
     }
     return paramType;
