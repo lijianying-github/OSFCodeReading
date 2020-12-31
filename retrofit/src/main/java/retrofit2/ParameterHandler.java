@@ -38,7 +38,7 @@ import okhttp3.RequestBody;
 abstract class ParameterHandler<T> {
 
     /**
-     * 将参数值追加到RequestBuilder中
+     * 将参数值追加到RequestBuilder中的具体实现细节
      *
      * @param builder 请求构建Builder
      * @param value   注解参数传递实参
@@ -158,8 +158,10 @@ abstract class ParameterHandler<T> {
             this.encoded = encoded;
         }
 
+
         @Override
         void apply(RequestBuilder builder, @Nullable T value) throws IOException {
+            //Query注解的参数值若注解中value为空或者参数实参为空则过滤
             if (value == null) return; // Skip null values.
 
             String queryValue = valueConverter.convert(value);
@@ -200,6 +202,7 @@ abstract class ParameterHandler<T> {
 
         @Override
         void apply(RequestBuilder builder, @Nullable Map<String, T> value) throws IOException {
+            //QueryMap参数注解实参不能为空，key,value不能为空以及value通过转化器转换后不能为空
             if (value == null) {
                 throw Utils.parameterError(method, p, "Query map was null");
             }
@@ -229,6 +232,7 @@ abstract class ParameterHandler<T> {
                                     + "'.");
                 }
 
+                //map遍历添加Query参数
                 builder.addQueryParam(entryKey, convertedEntryValue, encoded);
             }
         }
@@ -247,6 +251,7 @@ abstract class ParameterHandler<T> {
 
         @Override
         void apply(RequestBuilder builder, @Nullable Map<String, T> value) throws IOException {
+            //HeaderMap参数注解实参不能为空，key,value不能为空以及value通过转化器转换后不能为空
             if (value == null) {
                 throw Utils.parameterError(method, p, "Header map was null.");
             }
@@ -321,6 +326,7 @@ abstract class ParameterHandler<T> {
 
         @Override
         void apply(RequestBuilder builder, @Nullable Map<String, T> value) throws IOException {
+
             if (value == null) {
                 throw Utils.parameterError(method, p, "Field map was null.");
             }

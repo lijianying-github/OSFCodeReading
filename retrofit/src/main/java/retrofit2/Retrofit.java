@@ -66,6 +66,7 @@ import static java.util.Collections.unmodifiableList;
  * @author Jake Wharton (jw@squareup.com)
  */
 public final class Retrofit {
+    //接口方法解析缓存，目的减少解析反射注解解析性能损耗以及复用
     private final Map<Method, ServiceMethod<?>> serviceMethodCache = new ConcurrentHashMap<>();
 
     final okhttp3.Call.Factory callFactory;

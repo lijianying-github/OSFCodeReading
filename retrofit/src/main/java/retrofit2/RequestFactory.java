@@ -255,6 +255,7 @@ final class RequestFactory {
 
             parameterHandlers = new ParameterHandler<?>[parameterCount];
             for (int p = 0, lastParameter = parameterCount - 1; p < parameterCount; p++) {
+                //若是有协程则转换后是最后一个参数
                 parameterHandlers[p] =
                         parseParameter(p, parameterTypes[p], parameterAnnotationsArray[p], p == lastParameter);
             }
@@ -417,7 +418,7 @@ final class RequestFactory {
          * @param p                 参数下标
          * @param parameterType     参数类型
          * @param annotations       参数注解数组
-         * @param allowContinuation kotlin Continuation解析，一般是最后一个注解
+         * @param allowContinuation kotlin 协程解析，最后一个参数
          * @return 解析结果 对于参数是非Continuation类型，没有或者有多个retrofit参数注解将会异常退出，
          */
         private @Nullable
@@ -447,12 +448,24 @@ final class RequestFactory {
                 }
             }
 
-            //参数没有retrofit注解
+            //参数没有retrofit注解，检查函数是否有kotlin协程
+            //对于retrofit接口协程写法是：
+            //@GET("/")
+            //suspend fun test(@QueryMap params: Map<String, String>): Response
+
+            //协程suspend关键字内部转换成如下格式代码：
+            //@GET("/v2/news")
+            //fun test(@QueryMap params: Map<String, String>, continua: Continuation<Response>): Response
+            //所以retrofit参数注解解析判断当前方法是否是kotlin协程的方式是：
+            //最后一个参数没有retrofit注解并且，参数的原始数据类型是Continuation.class
+
+
             if (result == null) {
-                //kotlin Continuation参数，1.3新特性
+                //kotlin 协程解析
                 if (allowContinuation) {
                     try {
                         if (Utils.getRawType(parameterType) == Continuation.class) {
+                            //设置方法是协程的标志位
                             isKotlinSuspendFunction = true;
                             return null;
                         }
