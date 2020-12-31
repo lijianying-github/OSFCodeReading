@@ -42,6 +42,7 @@ abstract class ServiceMethod<T> {
         }
 
         //根据方法以及请求解析response部分，封装response数据转换 并最终封装生成一个call
+        //HttpServiceMethod是ServiceMethod的子类实现了invoke接口
         return HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);
     }
 

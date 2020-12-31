@@ -33,43 +33,63 @@ import static retrofit2.Utils.methodError;
  * */
 abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<ReturnT> {
   /**
-   * Inspects the annotations on an interface method to construct a reusable service method that
-   * speaks HTTP. This requires potentially-expensive reflection so it is best to build each service
-   * method only once and reuse it.
+   *检查接口方法的注解，通过注解构建HTTP代言
    */
   static <ResponseT, ReturnT> HttpServiceMethod<ResponseT, ReturnT> parseAnnotations(
       Retrofit retrofit, Method method, RequestFactory requestFactory) {
+
+    //kotlin部分协程处理
     boolean isKotlinSuspendFunction = requestFactory.isKotlinSuspendFunction;
     boolean continuationWantsResponse = false;
     boolean continuationBodyNullable = false;
 
     Annotation[] annotations = method.getAnnotations();
+
+    //http 请求返回数据类型
     Type adapterType;
+
     if (isKotlinSuspendFunction) {
+      //kotlin部分协程解析
       Type[] parameterTypes = method.getGenericParameterTypes();
+      //协程方法中，最后一个参数是Continuation<T> T是构建请求的返回类型也就是responseType
+
+      //通过协程参数获取方法的响应数据类型
       Type responseType =
           Utils.getParameterLowerBound(
               0, (ParameterizedType) parameterTypes[parameterTypes.length - 1]);
+
+      //指定泛型参数类型的响应数据类型：如Response<String>
       if (getRawType(responseType) == Response.class && responseType instanceof ParameterizedType) {
         // Unwrap the actual body type from Response<T>.
+        //获取Response<T>中T的类型，解析response返回数据类型成功，协程可以处理响应数据
         responseType = Utils.getParameterUpperBound(0, (ParameterizedType) responseType);
         continuationWantsResponse = true;
       } else {
+        //http responseType解析失败
         // TODO figure out if type is nullable or not
         // Metadata metadata = method.getDeclaringClass().getAnnotation(Metadata.class)
         // Find the entry for method
         // Determine if return type is nullable or not
       }
 
+      //缓存当前协程Http call 以及response的参数化类型
       adapterType = new Utils.ParameterizedTypeImpl(null, Call.class, responseType);
+      //检查方法注解中是否有SkipCallbackExecutor注解，没有则添加.
+      //SkipCallbackExecutorImpl是注解SkipCallbackExecutor的实现类
+      //这个注解保证协程回调能够直接跳过executor获取返回结果回调
       annotations = SkipCallbackExecutorImpl.ensurePresent(annotations);
     } else {
+      //非kotlin方法，适配类型为方法的返回类型
       adapterType = method.getGenericReturnType();
     }
 
+    //创建Http call适配器，主要是根据返回类型，注解去retrofit callAdapterFactories中查询
     CallAdapter<ResponseT, ReturnT> callAdapter =
         createCallAdapter(retrofit, method, adapterType, annotations);
+
+    //获取适配器的responseType
     Type responseType = callAdapter.responseType();
+    //方法返回响应类型最低也应该是okhttp的 ResponseBody或者是retrofit的Response<XXX>
     if (responseType == okhttp3.Response.class) {
       throw methodError(
           method,
@@ -77,21 +97,26 @@ abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<Retur
               + getRawType(responseType).getName()
               + "' is not a valid response body type. Did you mean ResponseBody?");
     }
+    //必须指定返回Response泛型的具体类型也就是body的具体类型
     if (responseType == Response.class) {
       throw methodError(method, "Response must include generic type (e.g., Response<String>)");
     }
     // TODO support Unit for Kotlin?
+    //HEAD请求返回数据类型不能是void，这个ServiceMethod外层调用这个方法前已判断限制
     if (requestFactory.httpMethod.equals("HEAD") && !Void.class.equals(responseType)) {
       throw methodError(method, "HEAD method must use Void as response type.");
     }
 
+    //根据callAdapter中解析的响应数据类型，在retrofit converterFactories中查询对应的数据转换器
     Converter<ResponseBody, ResponseT> responseConverter =
         createResponseConverter(retrofit, method, responseType);
 
     okhttp3.Call.Factory callFactory = retrofit.callFactory;
     if (!isKotlinSuspendFunction) {
+      //非kotlin 创建Call适配器
       return new CallAdapted<>(requestFactory, callFactory, responseConverter, callAdapter);
     } else if (continuationWantsResponse) {
+      //创建协程Call adapter
       //noinspection unchecked Kotlin compiler guarantees ReturnT to be Object.
       return (HttpServiceMethod<ResponseT, ReturnT>)
           new SuspendForResponse<>(
@@ -100,6 +125,7 @@ abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<Retur
               responseConverter,
               (CallAdapter<ResponseT, Call<ResponseT>>) callAdapter);
     } else {
+      //kotlin 协程返不关心返回数据类型 call适配器构造
       //noinspection unchecked Kotlin compiler guarantees ReturnT to be Object.
       return (HttpServiceMethod<ResponseT, ReturnT>)
           new SuspendForBody<>(
@@ -111,6 +137,7 @@ abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<Retur
     }
   }
 
+  //根据returnType，注解，在retrofit callAdapterFactories中查询对应的call适配器
   private static <ResponseT, ReturnT> CallAdapter<ResponseT, ReturnT> createCallAdapter(
       Retrofit retrofit, Method method, Type returnType, Annotation[] annotations) {
     try {
@@ -121,6 +148,7 @@ abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<Retur
     }
   }
 
+  //根据responseType，注解，在retrofit converterFactories中查询对应的response body 转换器
   private static <ResponseT> Converter<ResponseBody, ResponseT> createResponseConverter(
       Retrofit retrofit, Method method, Type responseType) {
     Annotation[] annotations = method.getAnnotations();
