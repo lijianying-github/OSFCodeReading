@@ -27,7 +27,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.squareup.okio:okio:1.17.2'
     compileOnly 'org.conscrypt:conscrypt-openjdk-uber:2.0.0'
     compileOnly 'org.robolectric:android-all:10-robolectric-5803371'
