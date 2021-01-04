@@ -1,10 +1,10 @@
 apply plugin: 'com.android.library'
 
 android {
-  compileSdkVersion 29
+  compileSdkVersion rootProject.ext.compileSdkVersion
 
   defaultConfig {
-    minSdkVersion 21
+    minSdkVersion rootProject.ext.minSdkVersion
 
     // We need to disable D8 desugaring of default methods for the default method tests to work
     // correctly. This works in Android Studio because it sets the minSdk automatically based on

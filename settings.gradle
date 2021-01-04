@@ -26,3 +26,6 @@ include ':retrofit-converters:wire'
 include ':retrofit-sample'
 
 //retrofit project end
+
+include ':rxandroid'
+include ':rxandroid-sample'
