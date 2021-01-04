@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 
 dependencies {
   api project(':retrofit')
-  api deps.rxjava3
+  api project(':rxjava')
   api deps.reactiveStreams
   compileOnly deps.findBugsAnnotations
 

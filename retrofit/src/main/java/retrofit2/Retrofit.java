@@ -667,15 +667,18 @@ public final class Retrofit {
 
             okhttp3.Call.Factory callFactory = this.callFactory;
             if (callFactory == null) {
+                //默认 OkHttp client
                 callFactory = new OkHttpClient();
             }
 
             Executor callbackExecutor = this.callbackExecutor;
             if (callbackExecutor == null) {
+                //默认回调执行器，内部实现是主线程handler post runnable
                 callbackExecutor = platform.defaultCallbackExecutor();
             }
 
             // Make a defensive copy of the adapters and add the default Call adapter.
+            //默认的call 适配器是将call和回调绑定在一起
             List<CallAdapter.Factory> callAdapterFactories = new ArrayList<>(this.callAdapterFactories);
             callAdapterFactories.addAll(platform.defaultCallAdapterFactories(callbackExecutor));
 

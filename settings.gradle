@@ -1,5 +1,5 @@
 include ':app'
-rootProject.name = "OkhttpExperience"
+rootProject.name = "OSF_Code_Reading"
 
 //retrofit project start
 include ':retrofit'
@@ -27,5 +27,6 @@ include ':retrofit-sample'
 
 //retrofit project end
 
+include ':rxjava'
 include ':rxandroid'
 include ':rxandroid-sample'

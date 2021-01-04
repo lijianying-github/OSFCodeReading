@@ -80,6 +80,7 @@ final class DefaultCallAdapterFactory extends CallAdapter.Factory {
             @Override
             public void onResponse(Call<T> call, final Response<T> response) {
               callbackExecutor.execute(
+                      //默认在主线程中执行
                   () -> {
                     if (delegate.isCanceled()) {
                       // Emulate OkHttp's behavior of throwing/delivering an IOException on

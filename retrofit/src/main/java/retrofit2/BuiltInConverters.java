@@ -24,18 +24,33 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Streaming;
 
+/**
+ * 内置 request 和response转换器
+ */
 final class BuiltInConverters extends Converter.Factory {
   /** Not volatile because we don't mind multiple threads discovering this. */
   private boolean checkForKotlinUnit = true;
 
+  /**
+   *ResponseBody装换成目标方法返回对象
+   *
+   * @param type 方法返回结果
+   * @param annotations 方法注解集合
+   * @param retrofit retrofit
+   * @return 转换器
+   */
   @Override
   public @Nullable Converter<ResponseBody, ?> responseBodyConverter(
       Type type, Annotation[] annotations, Retrofit retrofit) {
+
+    //自定义返回结果是okhttp默认的ResponseBody
     if (type == ResponseBody.class) {
+      //判断字节流还是字符流
       return Utils.isAnnotationPresent(annotations, Streaming.class)
           ? StreamingResponseBodyConverter.INSTANCE
           : BufferingResponseBodyConverter.INSTANCE;
     }
+    //void类型
     if (type == Void.class) {
       return VoidResponseBodyConverter.INSTANCE;
     }
@@ -92,6 +107,9 @@ final class BuiltInConverters extends Converter.Factory {
     }
   }
 
+  /**
+   * 字节流数据转换器
+   */
   static final class StreamingResponseBodyConverter
       implements Converter<ResponseBody, ResponseBody> {
     static final StreamingResponseBodyConverter INSTANCE = new StreamingResponseBodyConverter();
@@ -102,6 +120,9 @@ final class BuiltInConverters extends Converter.Factory {
     }
   }
 
+  /**
+   * 字符流数据转换器
+   */
   static final class BufferingResponseBodyConverter
       implements Converter<ResponseBody, ResponseBody> {
     static final BufferingResponseBodyConverter INSTANCE = new BufferingResponseBodyConverter();
