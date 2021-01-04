@@ -1,5 +1,6 @@
-include ':app'
 rootProject.name = "OSF_Code_Reading"
+include ':okhttp3'
+include ':app'
 
 //retrofit project start
 include ':retrofit'
