@@ -56,6 +56,15 @@ buildscript {
         google()
         jcenter()
         gradlePluginPortal()
+        
+        //enable repo proxy
+        maven { url "https://jitpack.io" }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
+        maven {url 'https://maven.aliyun.com/repository/gradle-plugin'}
+        maven {url 'https://maven.aliyun.com/repository/central'}
     }
 }
 
@@ -64,6 +73,14 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+        
+        //enable repo proxy
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
+        maven {url 'https://maven.aliyun.com/repository/gradle-plugin'}
+        maven {url 'https://maven.aliyun.com/repository/central'}
     }
 }
 
@@ -72,6 +89,14 @@ subprojects {
         mavenCentral()
         google()
         jcenter()
+        
+         //enable repo proxy
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
+        maven {url 'https://maven.aliyun.com/repository/gradle-plugin'}
+        maven {url 'https://maven.aliyun.com/repository/central'}
     }
 
     tasks.withType(JavaCompile).configureEach { task ->
