@@ -16,7 +16,6 @@
 package retrofit2
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -32,7 +31,7 @@ import org.junit.Assert.fail
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
-import retrofit2.helpers.ToStringConverterFactory
+import retrofit2.helper.ToStringConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import java.io.IOException

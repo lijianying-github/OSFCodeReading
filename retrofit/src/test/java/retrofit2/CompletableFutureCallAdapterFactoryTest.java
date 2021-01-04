@@ -15,19 +15,22 @@
  */
 package retrofit2;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
-
 import com.google.common.reflect.TypeToken;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import retrofit2.helpers.ToStringConverterFactory;
+import retrofit2.helper.ToStringConverterFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 public final class CompletableFutureCallAdapterFactoryTest {
   private static final Annotation[] NO_ANNOTATIONS = new Annotation[0];

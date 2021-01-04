@@ -52,10 +52,11 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
-import retrofit2.helpers.DelegatingCallAdapterFactory;
-import retrofit2.helpers.NonMatchingCallAdapterFactory;
-import retrofit2.helpers.NonMatchingConverterFactory;
-import retrofit2.helpers.ToStringConverterFactory;
+
+import retrofit2.helper.DelegatingCallAdapterFactory;
+import retrofit2.helper.NonMatchingCallAdapterFactory;
+import retrofit2.helper.NonMatchingConverterFactory;
+import retrofit2.helper.ToStringConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;

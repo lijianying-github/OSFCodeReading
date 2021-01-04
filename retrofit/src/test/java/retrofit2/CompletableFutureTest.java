@@ -15,20 +15,22 @@
  */
 package retrofit2;
 
-import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_AFTER_REQUEST;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import retrofit2.helpers.ToStringConverterFactory;
+import retrofit2.helper.ToStringConverterFactory;
 import retrofit2.http.GET;
+
+import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_AFTER_REQUEST;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 public final class CompletableFutureTest {
   @Rule public final MockWebServer server = new MockWebServer();

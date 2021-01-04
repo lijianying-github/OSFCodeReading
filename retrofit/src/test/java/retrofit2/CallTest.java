@@ -15,12 +15,8 @@
  */
 package retrofit2;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static retrofit2.TestingUtils.repeat;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -31,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -41,14 +38,19 @@ import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
-import org.junit.Rule;
-import org.junit.Test;
-import retrofit2.helpers.ToStringConverterFactory;
+import retrofit2.helper.ToStringConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Streaming;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_DURING_RESPONSE_BODY;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static retrofit2.TestingUtils.repeat;
 
 public final class CallTest {
   @Rule public final MockWebServer server = new MockWebServer();

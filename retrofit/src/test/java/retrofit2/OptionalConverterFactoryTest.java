@@ -24,7 +24,8 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import retrofit2.helpers.ObjectInstanceConverterFactory;
+
+import retrofit2.helper.ObjectInstanceConverterFactory;
 import retrofit2.http.GET;
 
 public final class OptionalConverterFactoryTest {

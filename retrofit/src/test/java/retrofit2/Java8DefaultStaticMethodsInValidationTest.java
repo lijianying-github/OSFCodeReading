@@ -15,14 +15,15 @@
  */
 package retrofit2;
 
-import static org.junit.Assert.assertNotNull;
-
-import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
-import retrofit2.helpers.ToStringConverterFactory;
+
+import okhttp3.mockwebserver.MockWebServer;
+import retrofit2.helper.ToStringConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+
+import static org.junit.Assert.assertNotNull;
 
 public final class Java8DefaultStaticMethodsInValidationTest {
   @Rule public final MockWebServer server = new MockWebServer();

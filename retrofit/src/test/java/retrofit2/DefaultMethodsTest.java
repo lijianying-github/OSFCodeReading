@@ -15,16 +15,18 @@
  */
 package retrofit2;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Rule;
 import org.junit.Test;
-import retrofit2.helpers.ToStringConverterFactory;
+
+import java.io.IOException;
+
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import retrofit2.helper.ToStringConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class DefaultMethodsTest {
   @Rule public final MockWebServer server = new MockWebServer();
