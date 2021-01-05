@@ -433,6 +433,7 @@ public final class Retrofit {
     /**
      * Returns a {@link Converter} for {@code type} to {@link String} from the available {@linkplain
      * #converterFactories() factories}.
+     * 获取converterFactories中实现stringConverter方法的Converter
      */
     public <T> Converter<T, String> stringConverter(Type type, Annotation[] annotations) {
         Objects.requireNonNull(type, "type == null");
@@ -687,24 +688,30 @@ public final class Retrofit {
 
             Executor callbackExecutor = this.callbackExecutor;
             if (callbackExecutor == null) {
-                //默认回调执行器，内部实现是主线程handler post runnable
+                //默认回调执行器，内部实现是主线程handler post runnable+
                 callbackExecutor = platform.defaultCallbackExecutor();
             }
 
             // Make a defensive copy of the adapters and add the default Call adapter.
-            //默认的call 适配器是将call和回调绑定在一起
+            //默认的call 适配器是将一个包装的okhttp call的retrofit call和主线程handler回调绑定在一起
             List<CallAdapter.Factory> callAdapterFactories = new ArrayList<>(this.callAdapterFactories);
             callAdapterFactories.addAll(platform.defaultCallAdapterFactories(callbackExecutor));
 
             // Make a defensive copy of the converters.
+            //length=内置转换器1+用户自定义转换器+java 8Optional泛型类转换器
             List<Converter.Factory> converterFactories =
                     new ArrayList<>(
                             1 + this.converterFactories.size() + platform.defaultConverterFactoriesSize());
 
             // Add the built-in converter factory first. This prevents overriding its behavior but also
             // ensures correct behavior when using converters that consume all types.
+            //添加内置转换器
             converterFactories.add(new BuiltInConverters());
+
+            //用户自定义类型转换器
             converterFactories.addAll(this.converterFactories);
+
+            //若是java 8 添加Optional泛型类参数转换器
             converterFactories.addAll(platform.defaultConverterFactories());
 
             return new Retrofit(
