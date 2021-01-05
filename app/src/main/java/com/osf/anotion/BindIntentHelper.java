@@ -1,4 +1,4 @@
-package com.experience.anotion;
+package com.osf.anotion;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.experience.anotion;
+package com.osf.anotion;
 
 import androidx.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package com.experience;
+package com.osf;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.experience.anotion.BindIntent;
-import com.experience.anotion.BindIntentHelper;
+import com.osf.anotion.BindIntent;
+import com.osf.anotion.BindIntentHelper;
 
 public class SecondActivity extends AppCompatActivity {
 
