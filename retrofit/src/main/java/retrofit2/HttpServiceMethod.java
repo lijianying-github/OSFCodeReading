@@ -172,14 +172,30 @@ abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<Retur
     this.responseConverter = responseConverter;
   }
 
+  /**
+   * retrofit方法调用时触发方法
+   * @param args 方法参数
+   * @return retrofit call OkHttpCall
+   */
   @Override
   final @Nullable ReturnT invoke(Object[] args) {
     Call<ResponseT> call = new OkHttpCall<>(requestFactory, args, callFactory, responseConverter);
     return adapt(call, args);
   }
 
+  /**
+   * 对retrofit 最原始的OkHttpCall进行再次适配，比如适配成rx的observable call或者协程
+   * @param call OkHttpCall
+   * @param args 方法参数，目前只提供给协程使用
+   * @return 再次适配的call
+   */
   protected abstract @Nullable ReturnT adapt(Call<ResponseT> call, Object[] args);
 
+  /**
+   * 非协程retrofit 方法 call二次包装适配器
+   * @param <ResponseT>
+   * @param <ReturnT>
+   */
   static final class CallAdapted<ResponseT, ReturnT> extends HttpServiceMethod<ResponseT, ReturnT> {
     private final CallAdapter<ResponseT, ReturnT> callAdapter;
 

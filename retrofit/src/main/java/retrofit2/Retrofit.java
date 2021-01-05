@@ -46,6 +46,10 @@ import retrofit2.http.Url;
 import static java.util.Collections.unmodifiableList;
 
 /**
+ * Retrofit设计模式是外观设计模式
+ * build 是Builder设计模式
+ * create方法是动态代理设计模式
+ * <p>
  * Retrofit adapts a Java interface to HTTP calls by using annotations on the declared methods to
  * define how requests are made. Create instances using {@linkplain Builder the builder} and pass
  * your interface to {@link #create} to generate an implementation.
@@ -69,6 +73,7 @@ public final class Retrofit {
     //接口方法解析缓存，目的减少解析反射注解解析性能损耗以及复用
     private final Map<Method, ServiceMethod<?>> serviceMethodCache = new ConcurrentHashMap<>();
 
+    //实现是OkHttpClient 默认只支持OkHttp请求
     final okhttp3.Call.Factory callFactory;
     /**
      * 所有请求的基本地址
@@ -78,7 +83,7 @@ public final class Retrofit {
     final List<Converter.Factory> converterFactories;
     //call适配器工厂集合，将retrofit默认call转换成其他call如rx方式
     final List<CallAdapter.Factory> callAdapterFactories;
-    //执行器，call的执行流程
+    //执行器，call的执行流程以及回调流程，默认实现是一个主线程的handler
     final @Nullable
     Executor callbackExecutor;
     //立刻验证标志位
@@ -162,11 +167,14 @@ public final class Retrofit {
                             public @Nullable
                             Object invoke(Object proxy, Method method, @Nullable Object[] args)
                                     throws Throwable {
+                                //调用接口的具体方法，实际中是返回一个保证的okhttp的call
                                 // If the method is a method from Object then defer to normal invocation.
+                                //获取方法声明的地方，若是超类Object的方法比如notify这些方法，则直接调用方法
                                 if (method.getDeclaringClass() == Object.class) {
                                     return method.invoke(this, args);
                                 }
                                 args = args != null ? args : emptyArgs;
+                                //若是接口的java8默认方法则直接调用，否则解析方法注解并调用
                                 return platform.isDefaultMethod(method)
                                         ? platform.invokeDefaultMethod(method, service, proxy, args)
                                         : loadServiceMethod(method).invoke(args);
@@ -219,6 +227,12 @@ public final class Retrofit {
         }
     }
 
+    /**
+     * 解析方法注解生成retrofit call
+     *
+     * @param method 待解析方法
+     * @return HttpServiceMethod
+     */
     ServiceMethod<?> loadServiceMethod(Method method) {
         //先获取serviceMethodCache缓存中的方法，若有直接返回缓存中结果
         ServiceMethod<?> result = serviceMethodCache.get(method);
