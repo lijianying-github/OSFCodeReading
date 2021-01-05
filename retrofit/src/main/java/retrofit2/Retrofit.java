@@ -86,7 +86,7 @@ public final class Retrofit {
     //执行器，call的执行流程以及回调流程，默认实现是一个主线程的handler
     final @Nullable
     Executor callbackExecutor;
-    //立刻验证标志位
+    //立刻验证retrofit接口标志位
     final boolean validateEagerly;
 
     Retrofit(
@@ -212,7 +212,7 @@ public final class Retrofit {
             Collections.addAll(check, candidate.getInterfaces());
         }
 
-        //
+        //是否立即解析方法注解
         if (validateEagerly) {
             //根据运行虚拟机获取调用平台，虚拟机类型为Dalvik：调用Android
             Platform platform = Platform.get();
