@@ -1,3 +1,5 @@
+package com.osf;
+
 import java.io.IOException;
 
 import anotation.Nemo;
@@ -6,7 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Description:com.experience.OkHttpTest 责任链测试
+ * Description:com.experience.com.osf.OkHttpTest 责任链测试
  *
  * @author Li Jianying
  * @version 1.0

@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
 dependencies {
-  api deps.okhttp
+  api project(':okhttp3')
 
   compileOnly deps.android
   compileOnly deps.kotlinStdLib
