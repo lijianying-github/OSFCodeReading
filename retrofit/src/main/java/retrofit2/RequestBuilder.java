@@ -28,6 +28,7 @@ import okhttp3.RequestBody;
 import okio.Buffer;
 import okio.BufferedSink;
 
+//请求参数构建builder最终转换成okhttp 的request body
 final class RequestBuilder {
   private static final char[] HEX_DIGITS = {
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
@@ -49,9 +50,12 @@ final class RequestBuilder {
    */
   private static final Pattern PATH_TRAVERSAL = Pattern.compile("(.*/)?(\\.|%2e|%2E){1,2}(/.*)?");
 
+  //http 请求方法
   private final String method;
 
+  //请求服务器基址
   private final HttpUrl baseUrl;
+  //请求相对路径
   private @Nullable String relativeUrl;
   private @Nullable HttpUrl.Builder urlBuilder;
 
