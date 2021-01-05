@@ -46,6 +46,23 @@ abstract class ServiceMethod<T> {
         return HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);
     }
 
+    /**
+     * 调用retrofit方法获取call对象
+     * 调用默认实现：HttpServiceMethod.invoke()
+     * 流程如下：
+     * 1. 先构建一个retrofit包装的okhttp call代理类实现OkHttpCall
+     * 2. 根据方法的返回类型去callAdapterFactories中查找对应的CallAdapter(找不到直接抛出异常程序终止)
+     * 3. 调用CallAdapter的adapt方法将OkHttpCall包装成方法返回类型的call 比如rx call
+     * 4. 返回包装的call
+     * <p>
+     * 不同的包装call的回调处理流程不一样
+     * 默认的DefaultCallAdapterFactory是OkHttpCall+主线程回调handler实现
+     * rx 是RxJava3CallAdapter+OkHttpCall实现，回调是rx链式实现
+     *
+     * @param args 方法参数值
+     * @return 包装的Call
+     */
+    //获取call->HttpServiceMethod.invoke()->根据方法解析返回类型获取call
     abstract @Nullable
     T invoke(Object[] args);
 }

@@ -82,6 +82,7 @@ class Platform {
         return null;
     }
 
+    //内置call 适配器
     List<? extends CallAdapter.Factory> defaultCallAdapterFactories(
             @Nullable Executor callbackExecutor) {
         DefaultCallAdapterFactory executorFactory = new DefaultCallAdapterFactory(callbackExecutor);
@@ -119,6 +120,7 @@ class Platform {
         return lookup.unreflectSpecial(method, declaringClass).bindTo(object).invokeWithArguments(args);
     }
 
+    //android 平台执行器回调实现Handler
     static final class Android extends Platform {
         Android() {
             //android api 24(N 6.0 )及以上使用java8

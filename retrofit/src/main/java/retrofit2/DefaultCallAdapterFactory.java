@@ -42,8 +42,10 @@ final class DefaultCallAdapterFactory extends CallAdapter.Factory {
       throw new IllegalArgumentException(
           "Call return type must be parameterized as Call<Foo> or Call<? extends Foo>");
     }
+    //获取Call泛型中的真实返回数据类型即响应数据类型
     final Type responseType = Utils.getParameterUpperBound(0, (ParameterizedType) returnType);
 
+    //若不需要回调，则不实现call 的转换
     final Executor executor =
         Utils.isAnnotationPresent(annotations, SkipCallbackExecutor.class)
             ? null
