@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import okhttp3.Request;
 import okio.Timeout;
 
+//默认call 适配器工厂
 final class DefaultCallAdapterFactory extends CallAdapter.Factory {
   private final @Nullable Executor callbackExecutor;
 

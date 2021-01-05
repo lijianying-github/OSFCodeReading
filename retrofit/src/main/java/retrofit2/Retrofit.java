@@ -83,7 +83,7 @@ public final class Retrofit {
     final List<Converter.Factory> converterFactories;
     //call适配器工厂集合，将retrofit默认call转换成其他call如rx方式
     final List<CallAdapter.Factory> callAdapterFactories;
-    //执行器，call的执行流程以及回调流程，默认实现是一个主线程的handler
+    //默认callAdapter call enqueue异步回调执行器，，android 平台默认实现是一个主线程的handler,其他平台是null，可以重写成线程池
     final @Nullable
     Executor callbackExecutor;
     //立刻验证retrofit接口标志位
