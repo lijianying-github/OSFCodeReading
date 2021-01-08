@@ -6,15 +6,30 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import javax.inject.Inject;
+
+import di.component.DaggerMainComponent;
+import di.model.ModelA;
+import di.model.ModelCWithA;
+
 public class MainActivity extends AppCompatActivity {
 
-    private boolean isLaunch=false;
+    @Inject
+    ModelA modelA;
+
+    @Inject
+    ModelCWithA modelCWithA;
+
+    private boolean isLaunch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d("nemo", "MainActivity onCreate=====================");
+        DaggerMainComponent.create().injectActivity(this);
+        Log.d("inject", "modelA ::"+modelA);
+//        Log.d("inject", "modelCWithA ::"+modelCWithA);
 
     }
 
@@ -35,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d("nemo", "MainActivity onResume=====================");
         if (!isLaunch) {
-            Intent intent=new Intent(MainActivity.this, SecondActivity.class);
-            intent.putExtra(SecondActivity.EXTRA_KEY_MESSAGE,"Main launch==");
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            intent.putExtra(SecondActivity.EXTRA_KEY_MESSAGE, "Main launch==");
             startActivity(intent);
-            isLaunch=true;
+            isLaunch = true;
         }
     }
 

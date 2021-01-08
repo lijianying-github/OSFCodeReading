@@ -55,8 +55,8 @@ class Android10Platform extends AndroidPlatform {
 
             //反射替代 sslParameters.setApplicationProtocols(protocolsArray);
             try {
-                Method setApplicationProtocolsMethod = sslParameters.getClass().getDeclaredMethod("setApplicationProtocols");
-                setApplicationProtocolsMethod.invoke(sslParameters, protocolsArray);
+                Method setApplicationProtocolsMethod = sslParameters.getClass().getDeclaredMethod("setApplicationProtocols",String[].class);
+                setApplicationProtocolsMethod.invoke(sslParameters, (Object[]) protocolsArray);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }

@@ -29,7 +29,7 @@ import static retrofit2.Utils.getRawType;
 import static retrofit2.Utils.methodError;
 
 /** Adapts an invocation of an interface method into an HTTP call.
- * 将接口方法适配成Http call
+ * 将接口方法适配成 Http call
  * */
 abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<ReturnT> {
   /**
