@@ -1,6 +1,8 @@
 rootProject.name = "OSF_Code_Reading"
-include ':okhttp3'
 include ':app'
+include ':dagger-practice'
+
+include ':okhttp3'
 
 //retrofit project start
 include ':retrofit'

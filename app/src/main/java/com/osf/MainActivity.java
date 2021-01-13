@@ -15,10 +15,11 @@ import di.model.ModelCWithA;
 public class MainActivity extends AppCompatActivity {
 
     @Inject
-    ModelA modelA;
+    ModelCWithA modelCWithA;
 
     @Inject
-    ModelCWithA modelCWithA;
+    ModelA modelA;
+
 
     private boolean isLaunch = false;
 
