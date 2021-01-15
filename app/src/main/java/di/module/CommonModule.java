@@ -2,9 +2,9 @@ package di.module;
 
 import dagger.Module;
 import dagger.Provides;
-import di.model.ModelA;
-import di.model.ModelB;
-import di.model.ModelCWithA;
+import di.scope.ModelA;
+import di.scope.ModelB;
+import di.scope.ModelCWithA;
 
 /**
  * Description:

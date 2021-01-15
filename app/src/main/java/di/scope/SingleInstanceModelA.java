@@ -1,4 +1,4 @@
-package di.model;
+package di.scope;
 
 /**
  * Description:

@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import di.component.DaggerMainComponent;
-import di.model.ModelA;
-import di.model.ModelCWithA;
+import di.scope.ModelA;
+import di.scope.ModelCWithA;
 
 public class MainActivity extends AppCompatActivity {
 

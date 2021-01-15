@@ -1,4 +1,4 @@
-package di.model;
+package di.scope;
 
 /**
  * Description:
@@ -7,12 +7,12 @@ package di.model;
  * @version 1.0
  * @since 2021/1/8
  */
-public class SingleInstanceModelA {
-    public String name="SingleInstanceModelA";
+public class ModelB {
+    public String name="ModelB";
 
     @Override
     public String toString() {
-        return "SingleInstanceModelA{" +
+        return "ModelB{" +
                 "name='" + name + '\'' +
                 '}';
     }

@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import di.model.SingleInstanceModelA;
+import di.scope.SingleInstanceModelA;
 
 /**
  * Description:
