@@ -33,7 +33,7 @@ import okhttp3.internal.Util;
 
 /**
  * Policy on when async requests are executed.
- * 异步请求执行策略
+ * 异步请求执行策略（不包含同步请求调用流程，只实现了同步请求的缓存和移除流程）
  *
  * <p>Each dispatcher uses an {@link ExecutorService} to run calls internally. If you supply your
  * own executor, it should be able to run {@linkplain #getMaxRequests the configured maximum} number
