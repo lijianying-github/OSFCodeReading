@@ -124,13 +124,17 @@ import static okhttp3.internal.Util.checkDuration;
  * remain idle.
  */
 public class OkHttpClient implements Cloneable, Call.Factory, WebSocket.Factory {
+
+  //默认支持Http 2和1.1 其他的可以在Protocol里面选，Protocol 不支持协议扩充
   static final List<Protocol> DEFAULT_PROTOCOLS = Util.immutableList(
       Protocol.HTTP_2, Protocol.HTTP_1_1);
 
+  //默认连接规范：标准TLS 和Http 明文
   static final List<ConnectionSpec> DEFAULT_CONNECTION_SPECS = Util.immutableList(
       ConnectionSpec.MODERN_TLS, ConnectionSpec.CLEARTEXT);
 
   static {
+    //内部处理请求头、连接池相关的增强工具类
     Internal.instance = new Internal() {
       @Override public void addLenient(Headers.Builder builder, String line) {
         builder.addLenient(line);

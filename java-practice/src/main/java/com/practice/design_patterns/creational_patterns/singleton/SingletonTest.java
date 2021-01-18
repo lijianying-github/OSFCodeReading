@@ -43,7 +43,7 @@ public class SingletonTest {
             new Thread(() -> {
                 testSingletonReflectInvoke(HungrySingleton.class);
                 testSingletonReflectInvoke(InnerClazzLazySingleton.class);
-                testSingletonReflectInvoke(DoubleCheckLazySingleton.class);
+                testSingletonReflectInvoke(DoubleCheckLockLazySingleton.class);
                 testSingletonReflectInvoke(KotlinSingleton.class);
             }).start();
         }
@@ -65,9 +65,9 @@ public class SingletonTest {
     }
 
     private static void testDoubleCheckLazySingleton() {
-        DoubleCheckLazySingleton doubleCheckLazySingleton = DoubleCheckLazySingleton.getInstance();
-        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(doubleCheckLazySingleton));
-        System.out.println("doubleCheckLazySingleton==" + doubleCheckLazySingleton.hashCode()
+        DoubleCheckLockLazySingleton doubleCheckLockLazySingleton = DoubleCheckLockLazySingleton.getInstance();
+        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(doubleCheckLockLazySingleton));
+        System.out.println("doubleCheckLazySingleton==" + doubleCheckLockLazySingleton.hashCode()
                 + "==" + Thread.currentThread().getName() + "==size::" + size);
     }
 
