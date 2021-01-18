@@ -8,6 +8,8 @@ dependencies {
     compileOnly deps.kotlinCoroutines
 
     compileOnly deps.findBugsAnnotations
+    //对象大小查看器
+    api "org.apache.lucene:lucene-core:8.7.0"
 
     testImplementation deps.junit
     testImplementation deps.assertj

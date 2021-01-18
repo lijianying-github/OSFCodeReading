@@ -1,9 +1,11 @@
 package com.practice.design_patterns.creational_patterns.singleton;
 
+import org.apache.lucene.util.RamUsageEstimator;
+
 import java.lang.reflect.Constructor;
 
 /**
- * Description:
+ * Description:JVM创建一个对象默认16bytes 创建一个枚举默认24bytes
  *
  * @author Li Jianying
  * @version 1.0
@@ -13,7 +15,7 @@ public class SingletonTest {
 
     public static void main(String[] args) {
         testMultiThreadCreate();
-        testMultiThreadReflectCreate();
+//        testMultiThreadReflectCreate();
     }
 
     /**
@@ -27,6 +29,7 @@ public class SingletonTest {
                 testKotlinSingleton();
                 testDoubleCheckLazySingleton();
                 testInnerClazzLazySingleton();
+                testEnumSingleton();
             }).start();
         }
     }
@@ -48,23 +51,39 @@ public class SingletonTest {
 
     private static void testHungrySingleton() {
         HungrySingleton hungrySingleton = HungrySingleton.getInstance();
-        System.out.println("hungrySingleton==" + hungrySingleton.hashCode() + "==" + Thread.currentThread().getName());
+        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(hungrySingleton));
+        System.out.println("hungrySingleton==" + hungrySingleton.hashCode()
+                + "==" + Thread.currentThread().getName() + "==size::" + size);
+
     }
 
     private static void testInnerClazzLazySingleton() {
         InnerClazzLazySingleton innerClazzLazySingleton = InnerClazzLazySingleton.getInstance();
-        System.out.println("innerClazzLazySingleton==" + innerClazzLazySingleton.hashCode() + "==" + Thread.currentThread().getName());
+        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(innerClazzLazySingleton));
+        System.out.println("innerClazzLazySingleton==" + innerClazzLazySingleton.hashCode()
+                + "==" + Thread.currentThread().getName() + "==size::" + size);
     }
 
     private static void testDoubleCheckLazySingleton() {
         DoubleCheckLazySingleton doubleCheckLazySingleton = DoubleCheckLazySingleton.getInstance();
-        System.out.println("doubleCheckLazySingleton==" + doubleCheckLazySingleton.hashCode() + "==" + Thread.currentThread().getName());
+        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(doubleCheckLazySingleton));
+        System.out.println("doubleCheckLazySingleton==" + doubleCheckLazySingleton.hashCode()
+                + "==" + Thread.currentThread().getName() + "==size::" + size);
+    }
+
+    private static void testEnumSingleton() {
+        EnumSingleton enumSingleton = EnumSingleton.INSTANCE;
+        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(enumSingleton));
+        System.out.println("enumSingleton==" + enumSingleton.hashCode()
+                + "==" + Thread.currentThread().getName() + "==size::" + size);
     }
 
     //kotlin 版单例创建，反射可以创建多个对象
     private static void testKotlinSingleton() {
         KotlinSingleton kotlinSingleton = KotlinSingleton.INSTANCE;
-        System.out.println("kotlinSingleton==" + kotlinSingleton.hashCode() + "==" + Thread.currentThread().getName());
+        String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(kotlinSingleton));
+        System.out.println("kotlinSingleton==" + kotlinSingleton.hashCode()
+                + "==" + Thread.currentThread().getName() + "==size::" + size);
     }
 
     private static <T> void testSingletonReflectInvoke(Class<T> clazz) {
