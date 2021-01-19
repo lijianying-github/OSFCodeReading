@@ -18,7 +18,7 @@ Serializable性能不高和开销大的原因是序列化和反序列化过程�
 
 ### 序列化流程：
 1. 获取Parcel对象,写入对象并获取写入的字节数据
-```
+```java
    UserParcelable userParcelable = new UserParcelable();
    userParcelable.setAge(666);
    userParcelable.setName("test parcelable");
@@ -35,7 +35,7 @@ Serializable性能不高和开销大的原因是序列化和反序列化过程�
 
 ### 反序列化流程：
 1. 获取Parcel对象，写入持久化字节数据，设置读取位置为开始起始位置，读取数据到对象
-```
+```java
     //获取序列化文件内容
      byte[] dataByte = FileUtils.getBytes("parcel");
 
@@ -55,7 +55,7 @@ Serializable性能不高和开销大的原因是序列化和反序列化过程�
 1. 序列化类实现 Parcelable 接口
 2. 必须创建Creator内部类实现
 Demo如下：
-```
+```java
 public class UserParcelable implements Parcelable {
 
     private String name;

@@ -40,7 +40,7 @@
 1. 对字段添加transit标识符
 2. 或者手动添加如下方法手动实现指定字段序列化，注意读写顺序一致（注意必须是如下格式）：
 
-```
+```java
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
         objectOutputStream.writeUTF(name);
         objectOutputStream.write(age);
@@ -57,7 +57,7 @@
 1. 对字段添加transit标识符
 2. 在 writeExternal 和 readExternal方法中手动实现指定字段序列化,注意读写顺序一致
 
-```
+```java
     @Override
     public void writeExternal(ObjectOutput objectOutput) throws IOException {
         objectOutput.writeUTF(name);
