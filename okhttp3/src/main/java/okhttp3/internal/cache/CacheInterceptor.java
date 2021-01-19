@@ -51,6 +51,7 @@ public final class CacheInterceptor implements Interceptor {
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
+    System.out.println("CacheInterceptor intercept() run=============" );
     Response cacheCandidate = cache != null
         ? cache.get(chain.request())
         : null;

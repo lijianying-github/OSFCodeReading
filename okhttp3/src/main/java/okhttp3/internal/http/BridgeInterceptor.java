@@ -45,6 +45,7 @@ public final class BridgeInterceptor implements Interceptor {
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
+    System.out.println("BridgeInterceptor intercept() run=============" );
     Request userRequest = chain.request();
     Request.Builder requestBuilder = userRequest.newBuilder();
 

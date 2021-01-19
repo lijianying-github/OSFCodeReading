@@ -62,6 +62,7 @@ final class RealCall implements Call {
     // Safely publish the Call instance to the EventListener.
     RealCall call = new RealCall(client, originalRequest, forWebSocket);
     call.transmitter = new Transmitter(client, call);
+    System.out.println("RealCall newRealCall method invoke =========");
     return call;
   }
 
@@ -70,6 +71,7 @@ final class RealCall implements Call {
   }
 
   @Override public Response execute() throws IOException {
+    System.out.println("RealCall execute method invoke =========");
     synchronized (this) {
       if (executed) throw new IllegalStateException("Already Executed");
       executed = true;
@@ -208,6 +210,7 @@ final class RealCall implements Call {
   }
 
   Response getResponseWithInterceptorChain() throws IOException {
+    System.out.println("RealCall getResponseWithInterceptorChain method invoke =========");
     // Build a full stack of interceptors.
     List<Interceptor> interceptors = new ArrayList<>();
     interceptors.addAll(client.interceptors());
@@ -226,11 +229,13 @@ final class RealCall implements Call {
 
     boolean calledNoMoreExchanges = false;
     try {
+      System.out.println("RealCall start get response  =========");
       Response response = chain.proceed(originalRequest);
       if (transmitter.isCanceled()) {
         closeQuietly(response);
         throw new IOException("Canceled");
       }
+      System.out.println("RealCall get response success  =========");
       return response;
     } catch (IOException e) {
       calledNoMoreExchanges = true;

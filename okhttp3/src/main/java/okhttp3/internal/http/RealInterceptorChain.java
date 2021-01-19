@@ -119,6 +119,9 @@ public final class RealInterceptorChain implements Interceptor.Chain {
 
   public Response proceed(Request request, Transmitter transmitter, @Nullable Exchange exchange)
       throws IOException {
+
+    System.out.println("RealInterceptorChain proceed method invoke ====================");
+
     if (index >= interceptors.size()) throw new AssertionError();
 
     calls++;
@@ -139,6 +142,7 @@ public final class RealInterceptorChain implements Interceptor.Chain {
     RealInterceptorChain next = new RealInterceptorChain(interceptors, transmitter, exchange,
         index + 1, request, call, connectTimeout, readTimeout, writeTimeout);
     Interceptor interceptor = interceptors.get(index);
+    System.out.println("RealInterceptorChain handle next index  interceptor ===================="+index);
     Response response = interceptor.intercept(next);
 
     // Confirm that the next interceptor made its required call to chain.proceed().
@@ -156,7 +160,7 @@ public final class RealInterceptorChain implements Interceptor.Chain {
       throw new IllegalStateException(
           "interceptor " + interceptor + " returned a response with no body");
     }
-
+    System.out.println("RealInterceptorChain receive response  ====================");
     return response;
   }
 }

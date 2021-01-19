@@ -69,6 +69,7 @@ public final class RetryAndFollowUpInterceptor implements Interceptor {
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
+    System.out.println("RetryAndFollowUpInterceptor intercept() run=============" );
     Request request = chain.request();
     RealInterceptorChain realChain = (RealInterceptorChain) chain;
     Transmitter transmitter = realChain.transmitter();

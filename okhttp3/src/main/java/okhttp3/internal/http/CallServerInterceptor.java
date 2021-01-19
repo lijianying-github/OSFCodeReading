@@ -34,6 +34,7 @@ public final class CallServerInterceptor implements Interceptor {
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
+    System.out.println("CallServerInterceptor intercept() run=============" );
     RealInterceptorChain realChain = (RealInterceptorChain) chain;
     Exchange exchange = realChain.exchange();
     Request request = realChain.request();
