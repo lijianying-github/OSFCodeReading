@@ -85,6 +85,7 @@ public final class CacheInterceptor implements Interceptor {
 
     // If we don't need the network, we're done.
     if (networkRequest == null) {
+      System.out.println("CacheInterceptor return  response=============" );
       return cacheResponse.newBuilder()
           .cacheResponse(stripBody(cacheResponse))
           .build();
@@ -116,6 +117,7 @@ public final class CacheInterceptor implements Interceptor {
         // Content-Encoding header (as performed by initContentStream()).
         cache.trackConditionalCacheHit();
         cache.update(cacheResponse, response);
+        System.out.println("CacheInterceptor return  response=============" );
         return response;
       } else {
         closeQuietly(cacheResponse.body());
@@ -131,6 +133,7 @@ public final class CacheInterceptor implements Interceptor {
       if (HttpHeaders.hasBody(response) && CacheStrategy.isCacheable(response, networkRequest)) {
         // Offer this request to the cache.
         CacheRequest cacheRequest = cache.put(response);
+        System.out.println("CacheInterceptor return  response=============" );
         return cacheWritingResponse(cacheRequest, response);
       }
 
@@ -143,6 +146,7 @@ public final class CacheInterceptor implements Interceptor {
       }
     }
 
+    System.out.println("CacheInterceptor return  response=============" );
     return response;
   }
 

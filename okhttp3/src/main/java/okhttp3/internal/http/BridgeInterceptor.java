@@ -111,7 +111,9 @@ public final class BridgeInterceptor implements Interceptor {
       responseBuilder.body(new RealResponseBody(contentType, -1L, Okio.buffer(responseBody)));
     }
 
-    return responseBuilder.build();
+    Response bridgeResponse=responseBuilder.build();
+    System.out.println("BridgeInterceptor return  bridgeResponse=============" );
+    return bridgeResponse;
   }
 
   /** Returns a 'Cookie' HTTP request header with all cookies, like {@code a=b; c=d}. */

@@ -123,11 +123,13 @@ public final class RetryAndFollowUpInterceptor implements Interceptor {
         if (exchange != null && exchange.isDuplex()) {
           transmitter.timeoutEarlyExit();
         }
+        System.out.println("RetryAndFollowUpInterceptor return  response=============" );
         return response;
       }
 
       RequestBody followUpBody = followUp.body();
       if (followUpBody != null && followUpBody.isOneShot()) {
+        System.out.println("RetryAndFollowUpInterceptor return  response=============" );
         return response;
       }
 

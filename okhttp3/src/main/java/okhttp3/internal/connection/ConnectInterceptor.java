@@ -41,6 +41,7 @@ public final class ConnectInterceptor implements Interceptor {
     boolean doExtensiveHealthChecks = !request.method().equals("GET");
     Exchange exchange = transmitter.newExchange(chain, doExtensiveHealthChecks);
 
+    System.out.println("ConnectInterceptor return  response=============" );
     return realChain.proceed(request, transmitter, exchange);
   }
 }
