@@ -6,8 +6,13 @@
 3. Rxjava source version 3.0.3
 
 ## 相关技术点
+
+### 设计模式
+[设计模式总图](java-practice/src/main/java/com/practice/design_patterns/note.md)
+
 ### 序列化
 [Android Parcelable序列化](java-practice/src/main/java/com/practice/serialzable/android_platform/android_parcelable_note.md)
 
 [Java Serializable 序列化](java-practice/src/main/java/com/practice/serialzable/java_platform/java_serializable_note.md)
+
 
