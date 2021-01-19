@@ -14,6 +14,7 @@ Parcel对象在进行具体类型数据写入时直接调用Native C方法写入
 
 在Parcel初始创建时可以直接将一个字节数组输入到Parcel中，然后实现Parcelable接口对象可通过内部CREATOR接收Parcel完成对象的创建。
 目标是借助于直接操作native C++完成数据读写，弥补Serializable java层面序列化性能不高，内存开销大的问题。但是实现相对比较复杂。
+Serializable性能不高和开销大的原因是序列化和反序列化过程中使用了文件读写以及反射。
 
 ### 序列化流程：
 1. 获取Parcel对象,写入对象并获取写入的字节数据
