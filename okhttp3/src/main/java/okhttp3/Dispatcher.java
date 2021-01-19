@@ -146,6 +146,7 @@ public final class Dispatcher {
 
     //提交异步网络请求
     void enqueue(AsyncCall call) {
+        System.out.println("Dispatcher add an AsyncCall to readyAsyncCalls========");
         synchronized (this) {
             readyAsyncCalls.add(call);
 
@@ -154,6 +155,7 @@ public final class Dispatcher {
             if (!call.get().forWebSocket) {
                 //同步统一请求主机域名共享请求次数AtomicInteger值
                 AsyncCall existingCall = findExistingCallWithHost(call.host());
+                System.out.println("Dispatcher sync same host call  share request times========");
                 if (existingCall != null) call.reuseCallsPerHostFrom(existingCall);
             }
         }
@@ -244,6 +246,14 @@ public final class Dispatcher {
             asyncCall.executeOn(executorService());
         }
 
+        if (!executableCalls.isEmpty()) {
+            System.out.println("Dispatcher promoteAndExecute invoke add new task to runningAsyncCalls and permit to executorService::"
+                    + isRunning + "================");
+        } else {
+            System.out.println("Dispatcher promoteAndExecute invoke check runningAsyncCalls isRunning::"
+                    + isRunning + "================");
+
+        }
         return isRunning;
     }
 
@@ -251,6 +261,7 @@ public final class Dispatcher {
      * 提交同步请求（添加到同步请求队列）
      */
     synchronized void executed(RealCall call) {
+        System.out.println("Dispatcher add an syncCall to runningSyncCalls========");
         runningSyncCalls.add(call);
     }
 
@@ -285,11 +296,14 @@ public final class Dispatcher {
             idleCallback = this.idleCallback;
         }
 
+        System.out.println("Dispatcher finished an call ========");
+
         //检查异步任务队列
         boolean isRunning = promoteAndExecute();
 
         //任务队列没有任务执行，执行空闲回调
         if (!isRunning && idleCallback != null) {
+            System.out.println("Dispatcher idleCallback is run  ========");
             idleCallback.run();
         }
     }
