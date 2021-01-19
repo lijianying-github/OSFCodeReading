@@ -6,18 +6,21 @@
 当调用 ObjectOutStream.write(Object object)时，反射解析object class对象
 1. 检查object以及object的成员引用对象有无实现Serializable接口，若未实现则抛出未实现序列化异常。
 2. 打开文件对象，开始序列化流程
-3. 若object是实现 Serializable 接口则检查有无私有空返回方法writeObject有则调用该方法序列化字段到文件，若无该方法则逐个解析字段以及类型全部序列化
-4. 若object是实现 Externalizable 接口则调用writeExternal方法序列化字段到文件
+3. 计算object的serialVersionUID并保存到文件
+4. 若object是实现 Serializable 接口则检查有无私有空返回方法writeObject有则调用该方法序列化字段到文件，若无该方法则逐个解析字段以及类型全部序列化
+5. 若object是实现 Externalizable 接口则调用writeExternal方法序列化字段到文件
 
 ### 反序列化流程
 当调用 ObjectInputStream.readObject()方法时，加载ObjectInputStream构造传入文件流。
-1. 根据文件内容加载解析出class对象信息，反射class对象。
+1. 根据文件内容加载解析出对象描述信息类 ObjectStreamClass（内部包含生成class对象）
+2. 根据class对象计算出新的serialVersionUID和ObjectStreamClass解析出的文件中的serialVersionUID比较，若不一致则异常终止。
+3. 根据class反射构造方法生成目标对象object,判断class对象的实现接口方式
+4. 若是实现 Serializable 接口则检查有无私有空返回方法readObject有则调用该方法中readXX反序列化字段到object，若无该方法则逐个解析class字段以及完成字段赋值
+5. 若实现 Externalizable 接口则调用readExternal方法readXXX序列化字段到object
+6. 解析完成
 
-
-
-
-
-有无实现Serializable接口以及成员引用对象
+备注：serialVersionUID 目的验证版本的一致性，根据类class相关信息计算出的一个hash值，若重写该字段则使用该字段的值
+具体使用该字段是在构建 ObjectStreamClass 对象时根据getDeclaredSUID方法先解析了class的serialVersionUID字段值，没有时再计算
 
 ## 实现接口 Serializable
 1. 简单类（无引用或者继承对象）默认实现Serializable接口即可无特殊要求。
