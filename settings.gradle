@@ -4,6 +4,7 @@ include ':dagger-practice'
 include ':java-practice'
 
 include ':okhttp3'
+include ':gson'
 
 //retrofit project start
 include ':retrofit'
