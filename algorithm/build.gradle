@@ -1,0 +1,24 @@
+apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+dependencies {
+
+    compileOnly deps.kotlinStdLib
+    compileOnly deps.kotlinCoroutines
+
+    compileOnly deps.findBugsAnnotations
+    //对象大小查看器
+    api "org.apache.lucene:lucene-core:8.7.0"
+
+    testImplementation deps.junit
+    testImplementation deps.assertj
+    testImplementation deps.guava
+    testImplementation deps.kotlinStdLib
+    testImplementation deps.kotlinCoroutines
+}
+
+jar {
+    manifest {
+        attributes  'Automatic-Module-Name': 'java-algorithm'
+    }
+}

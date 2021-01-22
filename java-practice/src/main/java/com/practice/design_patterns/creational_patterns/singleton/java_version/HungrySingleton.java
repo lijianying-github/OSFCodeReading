@@ -1,4 +1,4 @@
-package com.practice.design_patterns.creational_patterns.singleton;
+package com.practice.design_patterns.creational_patterns.singleton.java_version;
 
 /**
  * Description:饿汉式静态方法创建单例

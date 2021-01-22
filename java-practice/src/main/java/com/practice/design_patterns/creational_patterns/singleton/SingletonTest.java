@@ -1,5 +1,11 @@
 package com.practice.design_patterns.creational_patterns.singleton;
 
+import com.practice.design_patterns.creational_patterns.singleton.java_version.DoubleCheckLockLazySingleton;
+import com.practice.design_patterns.creational_patterns.singleton.java_version.EnumSingleton;
+import com.practice.design_patterns.creational_patterns.singleton.java_version.HungrySingleton;
+import com.practice.design_patterns.creational_patterns.singleton.java_version.InnerClazzLazySingleton;
+import com.practice.design_patterns.creational_patterns.singleton.kt_version.KtHungrySingleton;
+
 import org.apache.lucene.util.RamUsageEstimator;
 
 import java.lang.reflect.Constructor;
@@ -44,7 +50,7 @@ public class SingletonTest {
                 testSingletonReflectInvoke(HungrySingleton.class);
                 testSingletonReflectInvoke(InnerClazzLazySingleton.class);
                 testSingletonReflectInvoke(DoubleCheckLockLazySingleton.class);
-                testSingletonReflectInvoke(KotlinSingleton.class);
+                testSingletonReflectInvoke(KtHungrySingleton.class);
             }).start();
         }
     }
@@ -80,7 +86,7 @@ public class SingletonTest {
 
     //kotlin 版单例创建，反射可以创建多个对象
     private static void testKotlinSingleton() {
-        KotlinSingleton kotlinSingleton = KotlinSingleton.INSTANCE;
+        KtHungrySingleton kotlinSingleton = KtHungrySingleton.INSTANCE;
         String size = RamUsageEstimator.humanReadableUnits(RamUsageEstimator.shallowSizeOf(kotlinSingleton));
         System.out.println("kotlinSingleton==" + kotlinSingleton.hashCode()
                 + "==" + Thread.currentThread().getName() + "==size::" + size);

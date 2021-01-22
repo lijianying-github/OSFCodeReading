@@ -1,4 +1,4 @@
-package com.practice.design_patterns.creational_patterns.singleton;
+package com.practice.design_patterns.creational_patterns.singleton.java_version;
 
 /**
  * Description:美剧创建单例，有自动序列化反序列化功能，但是创建枚举占用系统资源高

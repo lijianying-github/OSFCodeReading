@@ -1,7 +1,10 @@
 rootProject.name = "OSF_Code_Reading"
 include ':app'
+
 include ':dagger-practice'
 include ':java-practice'
+
+include ':algorithm'
 
 include ':okhttp3'
 include ':gson'

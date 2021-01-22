@@ -1,4 +1,4 @@
-package com.practice.design_patterns.creational_patterns.singleton;
+package com.practice.design_patterns.creational_patterns.singleton.java_version;
 
 /**
  * Description:懒汉式匿名内部类创建单例
