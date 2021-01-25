@@ -13,30 +13,98 @@
 
 package io.reactivex.rxjava3.core;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
-
 import org.reactivestreams.Publisher;
 
-import io.reactivex.rxjava3.annotations.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Spliterators;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import io.reactivex.rxjava3.annotations.BackpressureKind;
+import io.reactivex.rxjava3.annotations.BackpressureSupport;
+import io.reactivex.rxjava3.annotations.CheckReturnValue;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.annotations.Nullable;
+import io.reactivex.rxjava3.annotations.SchedulerSupport;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.exceptions.*;
-import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.functions.*;
+import io.reactivex.rxjava3.exceptions.CompositeException;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.exceptions.OnErrorNotImplementedException;
+import io.reactivex.rxjava3.exceptions.UndeliverableException;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.functions.BiConsumer;
+import io.reactivex.rxjava3.functions.BiFunction;
+import io.reactivex.rxjava3.functions.BiPredicate;
+import io.reactivex.rxjava3.functions.BooleanSupplier;
+import io.reactivex.rxjava3.functions.Cancellable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.functions.Function3;
+import io.reactivex.rxjava3.functions.Function4;
+import io.reactivex.rxjava3.functions.Function5;
+import io.reactivex.rxjava3.functions.Function6;
+import io.reactivex.rxjava3.functions.Function7;
+import io.reactivex.rxjava3.functions.Function8;
+import io.reactivex.rxjava3.functions.Function9;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.functions.Supplier;
+import io.reactivex.rxjava3.internal.functions.Functions;
+import io.reactivex.rxjava3.internal.functions.ObjectHelper;
 import io.reactivex.rxjava3.internal.fuseable.ScalarSupplier;
-import io.reactivex.rxjava3.internal.jdk8.*;
-import io.reactivex.rxjava3.internal.observers.*;
-import io.reactivex.rxjava3.internal.operators.flowable.*;
+import io.reactivex.rxjava3.internal.jdk8.ObservableCollectWithCollectorSingle;
+import io.reactivex.rxjava3.internal.jdk8.ObservableFirstStageObserver;
+import io.reactivex.rxjava3.internal.jdk8.ObservableFlatMapStream;
+import io.reactivex.rxjava3.internal.jdk8.ObservableFromCompletionStage;
+import io.reactivex.rxjava3.internal.jdk8.ObservableFromStream;
+import io.reactivex.rxjava3.internal.jdk8.ObservableLastStageObserver;
+import io.reactivex.rxjava3.internal.jdk8.ObservableMapOptional;
+import io.reactivex.rxjava3.internal.jdk8.ObservableSingleStageObserver;
+import io.reactivex.rxjava3.internal.observers.BlockingFirstObserver;
+import io.reactivex.rxjava3.internal.observers.BlockingLastObserver;
+import io.reactivex.rxjava3.internal.observers.ForEachWhileObserver;
+import io.reactivex.rxjava3.internal.observers.FutureObserver;
+import io.reactivex.rxjava3.internal.observers.LambdaObserver;
+import io.reactivex.rxjava3.internal.operators.flowable.FlowableFromObservable;
+import io.reactivex.rxjava3.internal.operators.flowable.FlowableOnBackpressureError;
 import io.reactivex.rxjava3.internal.operators.maybe.MaybeToObservable;
-import io.reactivex.rxjava3.internal.operators.mixed.*;
+import io.reactivex.rxjava3.internal.operators.mixed.ObservableConcatMapCompletable;
+import io.reactivex.rxjava3.internal.operators.mixed.ObservableConcatMapMaybe;
+import io.reactivex.rxjava3.internal.operators.mixed.ObservableConcatMapSingle;
+import io.reactivex.rxjava3.internal.operators.mixed.ObservableSwitchMapCompletable;
+import io.reactivex.rxjava3.internal.operators.mixed.ObservableSwitchMapMaybe;
+import io.reactivex.rxjava3.internal.operators.mixed.ObservableSwitchMapSingle;
 import io.reactivex.rxjava3.internal.operators.observable.*;
 import io.reactivex.rxjava3.internal.operators.single.SingleToObservable;
-import io.reactivex.rxjava3.internal.util.*;
-import io.reactivex.rxjava3.observables.*;
-import io.reactivex.rxjava3.observers.*;
+import io.reactivex.rxjava3.internal.util.ArrayListSupplier;
+import io.reactivex.rxjava3.internal.util.ErrorMode;
+import io.reactivex.rxjava3.internal.util.ExceptionHelper;
+import io.reactivex.rxjava3.internal.util.HashMapSupplier;
+import io.reactivex.rxjava3.observables.ConnectableObservable;
+import io.reactivex.rxjava3.observables.GroupedObservable;
+import io.reactivex.rxjava3.observers.SafeObserver;
+import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
-import io.reactivex.rxjava3.schedulers.*;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.schedulers.Timed;
 
 /**
  * The {@code Observable} class is the non-backpressured, optionally multi-valued base reactive class that
@@ -1744,6 +1812,7 @@ public abstract class Observable<@NonNull T> implements ObservableSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Observable<T> create(@NonNull ObservableOnSubscribe<T> source) {
         Objects.requireNonNull(source, "source is null");
+        System.out.println("rx_run：invoke Observable static method create with source==========");
         return RxJavaPlugins.onAssembly(new ObservableCreate<>(source));
     }
 
@@ -10344,6 +10413,7 @@ public abstract class Observable<@NonNull T> implements ObservableSource<T> {
     @NonNull
     public final <R> Observable<R> map(@NonNull Function<? super T, ? extends R> mapper) {
         Objects.requireNonNull(mapper, "mapper is null");
+        System.out.println("rx_run：invoke Observable public method map with params-1:"+mapper.getClass().getName());
         return RxJavaPlugins.onAssembly(new ObservableMap<>(this, mapper));
     }
 
@@ -13099,6 +13169,7 @@ public abstract class Observable<@NonNull T> implements ObservableSource<T> {
 
             Objects.requireNonNull(observer, "The RxJavaPlugins.onSubscribe hook returned a null Observer. Please change the handler provided to RxJavaPlugins.setOnObservableSubscribe for invalid null returns. Further reading: https://github.com/ReactiveX/RxJava/wiki/Plugins");
 
+            System.out.println("rx_run：invoke Observable  subscribe with observer::"+observer.getClass().getName());
             subscribeActual(observer);
         } catch (NullPointerException e) { // NOPMD
             throw e;

@@ -1,38 +1,47 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
 package io.reactivex.rxjava3.internal.operators.observable;
 
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
+import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.functions.Cancellable;
-import io.reactivex.rxjava3.internal.disposables.*;
+import io.reactivex.rxjava3.internal.disposables.CancellableDisposable;
+import io.reactivex.rxjava3.internal.disposables.DisposableHelper;
 import io.reactivex.rxjava3.internal.fuseable.SimpleQueue;
 import io.reactivex.rxjava3.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.rxjava3.internal.util.*;
+import io.reactivex.rxjava3.internal.util.AtomicThrowable;
+import io.reactivex.rxjava3.internal.util.ExceptionHelper;
 import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 
 public final class ObservableCreate<T> extends Observable<T> {
+
     final ObservableOnSubscribe<T> source;
 
     public ObservableCreate(ObservableOnSubscribe<T> source) {
         this.source = source;
+        System.out.println("rx_run：create ObservableCreate object with params1——source:" + source.getClass().getName());
     }
 
     @Override
     protected void subscribeActual(Observer<? super T> observer) {
+        System.out.println("rx_run：invoke ObservableCreate subscribeActual method===");
         CreateEmitter<T> parent = new CreateEmitter<>(observer);
         observer.onSubscribe(parent);
 
@@ -45,8 +54,8 @@ public final class ObservableCreate<T> extends Observable<T> {
     }
 
     static final class CreateEmitter<T>
-    extends AtomicReference<Disposable>
-    implements ObservableEmitter<T>, Disposable {
+            extends AtomicReference<Disposable>
+            implements ObservableEmitter<T>, Disposable {
 
         private static final long serialVersionUID = -3434801548987643227L;
 
@@ -54,6 +63,7 @@ public final class ObservableCreate<T> extends Observable<T> {
 
         CreateEmitter(Observer<? super T> observer) {
             this.observer = observer;
+            System.out.println("rx_run：create CreateEmitter object with params1——observer:" + observer.getClass().getName());
         }
 
         @Override
@@ -138,8 +148,8 @@ public final class ObservableCreate<T> extends Observable<T> {
      * @param <T> the value type
      */
     static final class SerializedEmitter<T>
-    extends AtomicInteger
-    implements ObservableEmitter<T> {
+            extends AtomicInteger
+            implements ObservableEmitter<T> {
 
         private static final long serialVersionUID = 4883307006032401862L;
 
@@ -226,9 +236,9 @@ public final class ObservableCreate<T> extends Observable<T> {
             SpscLinkedArrayQueue<T> q = queue;
             AtomicThrowable errors = this.errors;
             int missed = 1;
-            for (;;) {
+            for (; ; ) {
 
-                for (;;) {
+                for (; ; ) {
                     if (e.isDisposed()) {
                         q.clear();
                         return;
