@@ -1,7 +1,5 @@
 package com.algorithm.tree;
 
-import java.util.Arrays;
-
 /**
  * Description:二叉树重建
  *
@@ -23,13 +21,38 @@ public class BinaryTreeRestore {
 
         for (int index = 0; index < in.length; index++) {
             if (in[index] == root.val) {
-                root.left = reConstructBinaryTree(Arrays.copyOfRange(pre, 1, index + 1), Arrays.copyOfRange(in, 0, index));
-                root.right = reConstructBinaryTree(Arrays.copyOfRange(pre, index + 1, pre.length), Arrays.copyOfRange(in, index + 1, in.length));
+                root.left = reConstructBinaryTree(copyOfRange(pre, 1, index + 1), copyOfRange(in, 0, index));
+                root.right = reConstructBinaryTree(copyOfRange(pre, index + 1, pre.length), copyOfRange(in, index + 1, in.length));
                 break;
             }
         }
 
         return root;
+    }
+
+    public static int[] copyOfRange(int[] source, int from, int to) {
+
+        if (source == null || from < 0 || to < 0 || from > source.length - 1) {
+            return null;
+        }
+
+        int newLength = to - from;
+        if (newLength < 0) {
+            return null;
+        }
+
+        if (to >= source.length) {
+            newLength = source.length - from;
+            to = source.length;
+        }
+
+        int[] result = new int[newLength];
+
+        for (int index = from; index < to; index++) {
+            result[index - from] = source[index];
+        }
+
+        return result;
     }
 
     public static class TreeNode {
