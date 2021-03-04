@@ -3,6 +3,7 @@ include ':app'
 
 include ':dagger-practice'
 include ':java-practice'
+include ':kotlin_practice'
 
 include ':algorithm'
 
